@@ -1,9 +1,0 @@
-<package project="Mer:Trunk:Base" name="libgpg-error">
-  <title>Library for error values used by GnuPG components</title>
-  <description>This is a library that defines common error values for all GnuPG
-components.  Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt,
-pinentry, SmartCard Daemon and possibly more in the future.
-
-</description>
-  <url>ftp://ftp.gnupg.org/gcrypt/libgpg-error/</url>
-</package>
