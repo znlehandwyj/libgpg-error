@@ -1,3 +1,7 @@
+* Tue Dec 13 2011 Carsten Munk <carsten.munk@gmail.com> - 1.10
+- Update to 1.10
+- Add pkgconfig in libgpg-error instead of libgcrypt
+
 * Wed Aug 11 2010 Passion Zhao <passion.zhao@intel.com> - 1.9
 - Update to 1.9
 

@@ -1,11 +1,12 @@
 Summary: Library for error values used by GnuPG components
 Name: libgpg-error
-Version: 1.9
+Version: 1.10
 Release: 1
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
 Source2: wk@g10code.com
+Patch0: libgpg-error-1.10-adding-pc.patch
 Group: System/Libraries
 License: LGPLv2+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -31,12 +32,13 @@ contains files necessary to develop applications using libgpg-error.
 
 %prep
 %setup -q
+%patch0 -p1
 # The config script already suppresses the -L if it's /usr/lib, so cheat and
 # set it to a value which we know will be suppressed.
 sed -i -e 's|^libdir=@libdir@$|libdir=@exec_prefix@/lib|g' src/gpg-error-config.in
 
 %build
-%configure --disable-static
+%reconfigure --disable-static
 make
 
 %install
@@ -95,4 +97,4 @@ rm -fr $RPM_BUILD_ROOT
 %{_libdir}/libgpg-error.so
 %{_includedir}/gpg-error.h
 %{_datadir}/aclocal/gpg-error.m4
-
+%{_libdir}/pkgconfig/*.pc
