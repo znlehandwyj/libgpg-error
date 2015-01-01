@@ -1,3 +1,6 @@
+* Mon Oct 01 2012 Marko Saukko <marko.saukko@jollamobile.com> - 1.10
+- Contributing to MER#174: moving libs to /usr.
+
 * Tue Dec 13 2011 Carsten Munk <carsten.munk@gmail.com> - 1.10
 - Update to 1.10
 - Add pkgconfig in libgpg-error instead of libgcrypt

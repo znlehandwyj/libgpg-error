@@ -9,7 +9,6 @@ Source2: wk@g10code.com
 Patch0: libgpg-error-1.10-adding-pc.patch
 Group: System/Libraries
 License: LGPLv2+
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gawk, gettext
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -44,42 +43,12 @@ make
 %install
 rm -fr $RPM_BUILD_ROOT
 %make_install
-rm -rf $RPM_BUILD_ROOT/%{_datadir}/common-lisp
+rm -r $RPM_BUILD_ROOT/%{_datadir}/common-lisp
 
 %find_lang %{name}
 
-# Relocate the shared libraries to /%{_lib}.
-mkdir -p $RPM_BUILD_ROOT/%{_lib}
-for shlib in $RPM_BUILD_ROOT/%{_libdir}/*.so* ; do
-	if test -L "$shlib" ; then
-		rm "$shlib"
-	else
-		mv "$shlib" $RPM_BUILD_ROOT/%{_lib}/
-	fi
-done
-# Figure out where /%{_lib} is relative to %{_libdir}.
-touch $RPM_BUILD_ROOT/root_marker
-relroot=..
-while ! test -f $RPM_BUILD_ROOT/%{_libdir}/$relroot/root_marker ; do
-	relroot=$relroot/..
-done
-# Overwrite development symlinks.
-pushd $RPM_BUILD_ROOT/%{_libdir}
-for shlib in $relroot/%{_lib}/lib*.so.* ; do
-	shlib=`echo "$shlib" | sed -e 's,//,/,g'`
-	target=`basename "$shlib" | sed -e 's,\.so.*,,g'`.so
-	ln -sf $shlib $target
-done
-popd
-# Add the soname symlink.
-/sbin/ldconfig -n $RPM_BUILD_ROOT/%{_lib}/
-rm -f $RPM_BUILD_ROOT/root_marker
-
 %check
 make check
-
-%clean
-rm -fr $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 
@@ -89,7 +58,7 @@ rm -fr $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc COPYING COPYING.LIB AUTHORS README NEWS ChangeLog
 %{_bindir}/gpg-error
-/%{_lib}/libgpg-error.so.*
+%{_libdir}/libgpg-error.so.*
 
 %files devel
 %defattr(-,root,root)
@@ -98,3 +67,4 @@ rm -fr $RPM_BUILD_ROOT
 %{_includedir}/gpg-error.h
 %{_datadir}/aclocal/gpg-error.m4
 %{_libdir}/pkgconfig/*.pc
+
