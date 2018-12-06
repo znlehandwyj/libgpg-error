@@ -1,15 +1,15 @@
 Summary: Library for error values used by GnuPG components
 Name: libgpg-error
-Version: 1.10
+Version: 1.24
 Release: 1
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
-Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
-Source2: wk@g10code.com
 Patch0: libgpg-error-1.10-adding-pc.patch
 Group: System/Libraries
-License: LGPLv2+
-BuildRequires: gawk, gettext
+License: LGPLv2+ and GPLv2+
+BuildRequires: gawk
+BuildRequires: gettext
+BuildRequires: texinfo
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -30,14 +30,16 @@ pinentry, SmartCard Daemon and possibly more in the future. This package
 contains files necessary to develop applications using libgpg-error.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}/%{name}
 %patch0 -p1
 # The config script already suppresses the -L if it's /usr/lib, so cheat and
 # set it to a value which we know will be suppressed.
 sed -i -e 's|^libdir=@libdir@$|libdir=@exec_prefix@/lib|g' src/gpg-error-config.in
 
 %build
-%reconfigure --disable-static
+# The --enable-maintainer-mode is because version.texi file is only generated with that
+# See https://www.sourceware.org/ml/guile/2000-01/msg00534.html
+%reconfigure --disable-static --enable-maintainer-mode
 make
 
 %install
@@ -67,4 +69,6 @@ make check
 %{_includedir}/gpg-error.h
 %{_datadir}/aclocal/gpg-error.m4
 %{_libdir}/pkgconfig/*.pc
+%{_datadir}/info/gpgrt.info.gz
+%{_datadir}/man/man1/gpg-error-config.1.gz
 
